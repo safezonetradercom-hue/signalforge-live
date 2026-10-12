@@ -1,0 +1,12 @@
+{
+  "name": "signalforge-live-pro",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Real-market technical pattern dashboard starter",
+  "scripts": {
+    "start": "node server/server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
