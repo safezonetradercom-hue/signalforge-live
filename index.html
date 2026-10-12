@@ -1,43 +1,116 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#0b1020"><title>SignalForge Live — Market Analyzer</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10151d">
+  <title>SignalDesk — Trading Signals</title>
+  <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
-<header class="topbar"><a class="brand" href="#"><span class="logo">SF</span><span>SignalForge <small>LIVE ANALYZER</small><em class="owner-name">HRIDOY TRADER</em></span></a><div class="topright"><span class="live-dot"></span><span id="connection">Connecting to market data…</span><button id="refresh" class="outline">↻ Refresh</button></div></header>
-<main class="wrap">
-<section class="hero"><div><p class="eyebrow">TECHNICAL ANALYSIS WORKSPACE</p><h1>Read the market.<br><span>Follow the setup.</span></h1><p class="sub">Live candles, price action patterns and indicator confluence in one place.</p></div><div class="clockbox"><span>LOCAL TIME · BANGLADESH</span><strong id="clock">--:--:--</strong><small>Next 1-minute candle in <b id="countdown">--</b></small></div></section>
-<section class="controls panel"><div class="field"><label>MARKET TYPE</label><select id="market"><option value="real">Real market · Forex</option><option value="otc">Quotex OTC · connector required</option></select></div><div class="field"><label>ASSET</label><select id="symbol"><option>EURUSD</option></select></div><div class="field"><label>ANALYSIS TIMEFRAME</label><select id="timeframe"><option value="1m">1 minute</option><option value="5m">5 minutes</option><option value="15m">15 minutes</option><option value="30m">30 minutes</option><option value="1h">1 hour</option><option value="4h">4 hours</option></select></div><div class="field"><label>EXPIRY HORIZON</label><select id="expiry"><option value="1">1 minute</option><option value="2">2 minutes</option><option value="3">3 minutes</option></select></div><button id="analyze" class="primary">Analyze market ↗</button></section>
-<div id="notice" class="notice">Loading candles…</div>
-<section class="grid">
-<article class="panel signal-card"><div class="cardhead"><span>LIVE ANALYSIS</span><span id="statusPill" class="pill neutral">WAITING</span></div><div id="direction" class="direction wait">WAIT</div><p id="reason" class="reason">Waiting for enough completed market candles.</p><div class="meter"><div id="meterFill"></div></div><div class="scoreline"><span>Rule-match score</span><strong id="score">—</strong></div><div class="disclaimer">This score is not a win probability. Signals are educational analysis, not financial advice.</div><div class="signalmeta"><div><span>ASSET</span><b id="metaAsset">EURUSD</b></div><div><span>TIMEFRAME</span><b id="metaTf">1 minute</b></div><div><span>EXPIRY</span><b id="metaExpiry">1 minute</b></div></div></article>
-<article class="panel price-card"><div class="cardhead"><span>MARKET SNAPSHOT</span><span id="feedTag" class="feedtag">PUBLIC OHLC FEED</span></div><div class="price" id="price">—</div><div class="change" id="change">Waiting for price data</div><div class="chart" id="chart" aria-label="Recent candle close prices"></div><div class="stats"><div><span>EMA 9</span><b id="ema9">—</b></div><div><span>EMA 21</span><b id="ema21">—</b></div><div><span>RSI 14</span><b id="rsi">—</b></div></div></article>
-</section>
-<section class="grid lower"><article class="panel"><div class="cardhead"><span>PATTERN DETECTOR</span><span class="muted">Closed candles only</span></div><div id="patterns" class="pattern-list"><div class="pattern"><span>Scanning patterns…</span><b>—</b></div></div></article><article class="panel"><div class="cardhead"><span>RECENT SIGNAL LOG</span><button id="clearHistory" class="textbutton">Clear</button></div><div id="history" class="history"><p class="muted">No analysis yet.</p></div></article></section>
-<section class="panel admin">
-<div class="cardhead"><span>PRO ANALYTICS & PAPER TRADING</span><span class="pill neutral">SIMULATED · NOT BROKER CONNECTED</span></div>
-<div class="kpis">
-<div class="kpi"><span>TOTAL PAPER P&L</span><b id="totalProfit">$0.00</b><small>Based on manually settled demo trades</small></div>
-<div class="kpi"><span>TOTAL WINS</span><b id="totalWins" class="good">0</b><small>Paper trades only</small></div>
-<div class="kpi"><span>TOTAL LOSSES</span><b id="totalLosses" class="bad">0</b><small>Paper trades only</small></div>
-<div class="kpi"><span>WIN RATE</span><b id="winRate">0%</b><small>Wins ÷ all settled/open trades</small></div>
-</div>
-<div class="admin-grid">
-<div class="subpanel"><h3>Paper trade ticket</h3><p class="muted">Creates a simulated trade record only. It does not place a real trade.</p>
-<div class="ticket-row"><label>Stake amount</label><input id="stake" type="number" min="1" step="1" value="10"></div>
-<div class="ticket-row"><label>Direction</label><select id="paperDirection"><option value="CALL">CALL / UP</option><option value="PUT">PUT / DOWN</option></select></div>
-<div class="ticket-row"><label>Expiry</label><select id="paperExpiry"><option value="1">1 minute</option><option value="2">2 minutes</option><option value="3">3 minutes</option></select></div>
-<button id="createPaper" class="primary wide">Create paper trade</button><div id="paperMessage" class="muted"></div></div>
-<div class="subpanel"><h3>Admin settings</h3><p class="muted">Basic local demo settings; this is not a secured production admin login.</p>
-<div class="ticket-row"><label>Signal score threshold</label><input id="threshold" type="number" min="0" max="100" value="65"></div>
-<div class="ticket-row"><label>Auto refresh (seconds)</label><input id="refreshSecs" type="number" min="5" max="300" value="15"></div>
-<button id="saveSettings" class="outline wide">Save demo settings</button><div id="settingsMessage" class="muted"></div></div>
-</div>
-<div class="cardhead tablehead"><span>PAPER TRADE LEDGER</span><button id="refreshAdmin" class="textbutton">Refresh totals</button></div>
-<div class="tablewrap"><table><thead><tr><th>Asset</th><th>Direction</th><th>Stake</th><th>Result</th><th>P&L</th><th>Settle demo</th></tr></thead><tbody id="tradeLedger"><tr><td colspan="6">No paper trades yet.</td></tr></tbody></table></div>
-</section>
-<section class="panel watch"><div class="cardhead"><span>MARKET WATCHLIST</span><span class="muted">Tap an asset to analyze</span></div><div id="watchlist" class="watchlist"></div></section>
-<footer><b>SignalForge Live</b><span>Data availability depends on the provider. Never trade solely from one indicator or pattern.</span></footer>
-</main><script src="app.js"></script></body></html>
+  <div id="toast" class="toast" role="status"></div>
+  <main id="auth-screen" class="auth-layout">
+    <section class="auth-art">
+      <div class="brand"><span class="brand-mark">S</span><span>Signal<span class="brand-light">Desk</span></span></div>
+      <div class="hero-copy">
+        <span class="eyebrow"><span class="pulse"></span> MARKET INTELLIGENCE</span>
+        <h1>Make your next<br>move <em>with clarity.</em></h1>
+        <p>A clean workspace for tracking trading setups, reviewing signal status, and keeping your market plan in one place.</p>
+        <div class="mini-market">
+          <div><small>EUR/USD</small><strong>1.08420</strong><span class="positive">+0.42%</span></div>
+          <div class="sparkline" aria-label="Decorative price line"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        </div>
+      </div>
+      <div class="art-foot">MARKETS MOVE. STAY INFORMED.</div>
+    </section>
+    <section class="auth-side">
+      <div class="auth-box">
+        <div class="mobile-brand brand"><span class="brand-mark">S</span><span>Signal<span class="brand-light">Desk</span></span></div>
+        <div class="auth-heading"><span class="eyebrow">YOUR MARKET WORKSPACE</span><h2 id="auth-title">Welcome back</h2><p id="auth-subtitle">Sign in to view your signal dashboard.</p></div>
+        <form id="login-form" class="auth-form">
+          <label>Email address<input name="email" type="email" placeholder="you@example.com" autocomplete="email" required></label>
+          <label>Password<input name="password" type="password" placeholder="Enter your password" autocomplete="current-password" required></label>
+          <button class="btn btn-primary btn-full" type="submit">Sign in <span>↗</span></button>
+        </form>
+        <form id="register-form" class="auth-form hidden">
+          <label>Your name<input name="name" type="text" placeholder="Full name" autocomplete="name" minlength="2" required></label>
+          <label>Email address<input name="email" type="email" placeholder="you@example.com" autocomplete="email" required></label>
+          <label>Password<input name="password" type="password" placeholder="At least 10 characters" minlength="10" autocomplete="new-password" required></label>
+          <button class="btn btn-primary btn-full" type="submit">Create account <span>↗</span></button>
+        </form>
+        <p class="auth-switch"><span id="switch-copy">New to SignalDesk?</span> <button id="switch-auth" class="text-button" type="button">Create an account</button></p>
+        <div class="auth-note"><span>⌑</span> Demo signal values are illustrative only, not financial advice.</div>
+      </div>
+    </section>
+  </main>
+
+  <div id="app" class="app-shell hidden">
+    <aside id="sidebar" class="sidebar">
+      <div class="brand sidebar-brand"><span class="brand-mark">S</span><span>Signal<span class="brand-light">Desk</span></span></div>
+      <div class="workspace-label">WORKSPACE</div>
+      <nav>
+        <button class="nav-link active" data-view="dashboard"><span class="nav-icon">▦</span> Overview</button>
+        <button class="nav-link" data-view="signals"><span class="nav-icon">⌁</span> Live signals <span id="nav-active-count" class="nav-count">0</span></button>
+        <button class="nav-link admin-only hidden" data-view="admin"><span class="nav-icon">＋</span> Manage signals</button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="market-status"><span class="pulse"></span><div><strong>Workspace ready</strong><small>Signal feed · Manual updates</small></div></div>
+        <div class="user-card"><div id="avatar" class="avatar">U</div><div class="user-meta"><strong id="user-name">User</strong><small id="user-role">Member</small></div><button id="logout-btn" class="logout-btn" title="Sign out" aria-label="Sign out">↗</button></div>
+      </div>
+    </aside>
+
+    <main class="main-area">
+      <header class="topbar">
+        <button id="menu-btn" class="menu-btn" aria-label="Open navigation">☰</button>
+        <div class="breadcrumb">Workspace <span>/</span> <strong id="page-name">Overview</strong></div>
+        <div class="topbar-right"><span class="feed-pill"><span class="pulse"></span> MANUAL FEED</span><div class="top-avatar" id="top-avatar">U</div></div>
+      </header>
+      <section class="page-content">
+        <div class="page-heading">
+          <div><div class="eyebrow">MONDAY — MARKET OVERVIEW</div><h1 id="welcome-title">Good to see you.</h1><p>Here’s what’s happening in your signal workspace.</p></div>
+          <div class="heading-actions"><span class="date-chip" id="today-chip">Today</span><button id="new-signal-shortcut" class="btn btn-primary admin-only hidden">＋ New signal</button></div>
+        </div>
+
+        <section class="stats-grid">
+          <article class="stat-card"><div class="stat-top"><span>Total signals</span><span class="stat-icon violet">⌁</span></div><div class="stat-value" id="stat-total">0</div><div class="stat-foot">All recorded setups</div></article>
+          <article class="stat-card"><div class="stat-top"><span>Active setups</span><span class="stat-icon blue">◉</span></div><div class="stat-value" id="stat-active">0</div><div class="stat-foot"><span class="dot blue-dot"></span> Awaiting outcome</div></article>
+          <article class="stat-card"><div class="stat-top"><span>Wins recorded</span><span class="stat-icon green">↗</span></div><div class="stat-value" id="stat-wins">0</div><div class="stat-foot">Marked as successful</div></article>
+          <article class="stat-card"><div class="stat-top"><span>Losses recorded</span><span class="stat-icon red">↘</span></div><div class="stat-value" id="stat-losses">0</div><div class="stat-foot">Marked as unsuccessful</div></article>
+        </section>
+
+        <section class="content-grid">
+          <article class="panel signals-panel">
+            <div class="panel-header"><div><h2 id="table-heading">Recent signals</h2><p>Your latest market setups</p></div><button class="text-button" id="view-all">View all ↗</button></div>
+            <div class="filter-row"><div class="search-box"><span>⌕</span><input id="signal-search" type="search" placeholder="Search symbol..."></div><select id="status-filter" aria-label="Filter status"><option value="">All statuses</option><option>ACTIVE</option><option>WIN</option><option>LOSS</option><option>CANCELLED</option></select><select id="market-filter" aria-label="Filter market"><option value="">All markets</option><option>Forex</option><option>Metals</option><option>Crypto</option><option>Indices</option></select></div>
+            <div class="table-wrap"><table><thead><tr><th>MARKET / SYMBOL</th><th>TYPE</th><th>ENTRY</th><th>STOP LOSS</th><th>TAKE PROFIT</th><th>TIMEFRAME</th><th>STATUS</th><th class="admin-only hidden">ACTIONS</th></tr></thead><tbody id="signals-body"><tr><td colspan="8" class="empty-cell">Loading signals…</td></tr></tbody></table></div>
+            <div class="table-foot"><span id="table-count">0 signals</span><span>Updates reflect admin-entered data</span></div>
+          </article>
+          <aside class="panel side-panel"><div class="panel-header"><div><h2>Workspace notes</h2><p>Keep your process consistent</p></div><span class="stat-icon violet">✧</span></div>
+            <div class="note-card"><div class="note-icon">◎</div><div><strong>Follow your plan</strong><p>Review entry, stop loss and target before taking any action.</p></div></div>
+            <div class="note-card"><div class="note-icon blue-note">⌁</div><div><strong>Check the context</strong><p>Signals here are not a substitute for independent research.</p></div></div>
+            <div class="note-card"><div class="note-icon gold-note">◷</div><div><strong>Track outcomes</strong><p>Use completed statuses to keep a simple record of setups.</p></div></div>
+            <div class="risk-note"><strong>Risk reminder</strong><p>Trading involves risk. Sample data is illustrative. Nothing on this site guarantees profit or is financial advice.</p></div>
+          </aside>
+        </section>
+
+        <section id="admin-section" class="panel admin-panel hidden">
+          <div class="panel-header"><div><h2>Create a signal</h2><p>Only administrators can publish or update signals.</p></div><span class="admin-tag">ADMIN</span></div>
+          <form id="signal-form" class="signal-form">
+            <label>Symbol<input name="symbol" placeholder="e.g. EUR/USD" maxlength="24" required></label>
+            <label>Market<select name="market" required><option>Forex</option><option>Metals</option><option>Crypto</option><option>Indices</option></select></label>
+            <label>Direction<select name="direction" required><option>BUY</option><option>SELL</option></select></label>
+            <label>Entry<input name="entry" placeholder="Entry price" maxlength="32" required></label>
+            <label>Stop loss<input name="stop_loss" placeholder="Stop loss" maxlength="32" required></label>
+            <label>Take profit<input name="take_profit" placeholder="Take profit" maxlength="32" required></label>
+            <label>Timeframe<select name="timeframe"><option>5m</option><option>15m</option><option>30m</option><option>1h</option><option>4h</option><option>1d</option></select></label>
+            <label class="wide-field">Note (optional)<input name="note" placeholder="Context or disclaimer" maxlength="500"></label>
+            <div class="wide-field form-end"><span>Verify details before publishing.</span><button class="btn btn-primary" type="submit">Publish signal ↗</button></div>
+          </form>
+        </section>
+        <footer class="footer"><span>© <span id="year"></span> SignalDesk</span><span>Independent project · Not affiliated with DracoTrade</span><span>Trading involves risk.</span></footer>
+      </section>
+    </main>
+  </div>
+  <script src="/app.js" defer></script>
+</body>
+</html>
