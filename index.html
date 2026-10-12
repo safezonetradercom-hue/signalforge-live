@@ -1,20 +1,43 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#08111f"><title>SignalForge — Demo Signals</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b1020"><title>SignalForge Live — Market Analyzer</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<header class="top"><a class="brand" href="#"><span class="logo">✦</span> SIGNAL<span>FORGE</span></a><span class="pill"><i></i> DEMO MODE</span></header>
-<main>
-<section class="hero"><p class="eyebrow">MARKET INTELLIGENCE • PRACTICE ONLY</p><h1>Live Signals<span>.</span></h1><p class="sub">A clean dashboard for sample trading signals. These are examples, not live market advice.</p>
-<div class="stats"><div><small>Today's examples</small><strong id="total">04</strong></div><div><small>Market mode</small><strong>DEMO</strong></div><div><small>Expiry</small><strong>1 MIN</strong></div></div></section>
-<section class="section-head"><div><h2>Signal feed</h2><p>Sample data • Updates when you refresh</p></div><button id="refresh">↻ Refresh</button></section>
-<div class="filters"><button class="filter active" data-filter="ALL">All</button><button class="filter" data-filter="CALL">CALL</button><button class="filter" data-filter="PUT">PUT</button></div>
-<section id="signals" class="signals" aria-live="polite"></section>
-<p class="disclaimer">⚠️ Demo only. Signals are fictional examples and do not predict market movement. Trading involves risk.</p>
-</main>
-<footer>© 2026 SignalForge • Demo interface</footer>
-<script src="app.js"></script>
-</body></html>
+<header class="topbar"><a class="brand" href="#"><span class="logo">SF</span><span>SignalForge <small>LIVE ANALYZER</small><em class="owner-name">HRIDOY TRADER</em></span></a><div class="topright"><span class="live-dot"></span><span id="connection">Connecting to market data…</span><button id="refresh" class="outline">↻ Refresh</button></div></header>
+<main class="wrap">
+<section class="hero"><div><p class="eyebrow">TECHNICAL ANALYSIS WORKSPACE</p><h1>Read the market.<br><span>Follow the setup.</span></h1><p class="sub">Live candles, price action patterns and indicator confluence in one place.</p></div><div class="clockbox"><span>LOCAL TIME · BANGLADESH</span><strong id="clock">--:--:--</strong><small>Next 1-minute candle in <b id="countdown">--</b></small></div></section>
+<section class="controls panel"><div class="field"><label>MARKET TYPE</label><select id="market"><option value="real">Real market · Forex</option><option value="otc">Quotex OTC · connector required</option></select></div><div class="field"><label>ASSET</label><select id="symbol"><option>EURUSD</option></select></div><div class="field"><label>ANALYSIS TIMEFRAME</label><select id="timeframe"><option value="1m">1 minute</option><option value="5m">5 minutes</option><option value="15m">15 minutes</option><option value="30m">30 minutes</option><option value="1h">1 hour</option><option value="4h">4 hours</option></select></div><div class="field"><label>EXPIRY HORIZON</label><select id="expiry"><option value="1">1 minute</option><option value="2">2 minutes</option><option value="3">3 minutes</option></select></div><button id="analyze" class="primary">Analyze market ↗</button></section>
+<div id="notice" class="notice">Loading candles…</div>
+<section class="grid">
+<article class="panel signal-card"><div class="cardhead"><span>LIVE ANALYSIS</span><span id="statusPill" class="pill neutral">WAITING</span></div><div id="direction" class="direction wait">WAIT</div><p id="reason" class="reason">Waiting for enough completed market candles.</p><div class="meter"><div id="meterFill"></div></div><div class="scoreline"><span>Rule-match score</span><strong id="score">—</strong></div><div class="disclaimer">This score is not a win probability. Signals are educational analysis, not financial advice.</div><div class="signalmeta"><div><span>ASSET</span><b id="metaAsset">EURUSD</b></div><div><span>TIMEFRAME</span><b id="metaTf">1 minute</b></div><div><span>EXPIRY</span><b id="metaExpiry">1 minute</b></div></div></article>
+<article class="panel price-card"><div class="cardhead"><span>MARKET SNAPSHOT</span><span id="feedTag" class="feedtag">PUBLIC OHLC FEED</span></div><div class="price" id="price">—</div><div class="change" id="change">Waiting for price data</div><div class="chart" id="chart" aria-label="Recent candle close prices"></div><div class="stats"><div><span>EMA 9</span><b id="ema9">—</b></div><div><span>EMA 21</span><b id="ema21">—</b></div><div><span>RSI 14</span><b id="rsi">—</b></div></div></article>
+</section>
+<section class="grid lower"><article class="panel"><div class="cardhead"><span>PATTERN DETECTOR</span><span class="muted">Closed candles only</span></div><div id="patterns" class="pattern-list"><div class="pattern"><span>Scanning patterns…</span><b>—</b></div></div></article><article class="panel"><div class="cardhead"><span>RECENT SIGNAL LOG</span><button id="clearHistory" class="textbutton">Clear</button></div><div id="history" class="history"><p class="muted">No analysis yet.</p></div></article></section>
+<section class="panel admin">
+<div class="cardhead"><span>PRO ANALYTICS & PAPER TRADING</span><span class="pill neutral">SIMULATED · NOT BROKER CONNECTED</span></div>
+<div class="kpis">
+<div class="kpi"><span>TOTAL PAPER P&L</span><b id="totalProfit">$0.00</b><small>Based on manually settled demo trades</small></div>
+<div class="kpi"><span>TOTAL WINS</span><b id="totalWins" class="good">0</b><small>Paper trades only</small></div>
+<div class="kpi"><span>TOTAL LOSSES</span><b id="totalLosses" class="bad">0</b><small>Paper trades only</small></div>
+<div class="kpi"><span>WIN RATE</span><b id="winRate">0%</b><small>Wins ÷ all settled/open trades</small></div>
+</div>
+<div class="admin-grid">
+<div class="subpanel"><h3>Paper trade ticket</h3><p class="muted">Creates a simulated trade record only. It does not place a real trade.</p>
+<div class="ticket-row"><label>Stake amount</label><input id="stake" type="number" min="1" step="1" value="10"></div>
+<div class="ticket-row"><label>Direction</label><select id="paperDirection"><option value="CALL">CALL / UP</option><option value="PUT">PUT / DOWN</option></select></div>
+<div class="ticket-row"><label>Expiry</label><select id="paperExpiry"><option value="1">1 minute</option><option value="2">2 minutes</option><option value="3">3 minutes</option></select></div>
+<button id="createPaper" class="primary wide">Create paper trade</button><div id="paperMessage" class="muted"></div></div>
+<div class="subpanel"><h3>Admin settings</h3><p class="muted">Basic local demo settings; this is not a secured production admin login.</p>
+<div class="ticket-row"><label>Signal score threshold</label><input id="threshold" type="number" min="0" max="100" value="65"></div>
+<div class="ticket-row"><label>Auto refresh (seconds)</label><input id="refreshSecs" type="number" min="5" max="300" value="15"></div>
+<button id="saveSettings" class="outline wide">Save demo settings</button><div id="settingsMessage" class="muted"></div></div>
+</div>
+<div class="cardhead tablehead"><span>PAPER TRADE LEDGER</span><button id="refreshAdmin" class="textbutton">Refresh totals</button></div>
+<div class="tablewrap"><table><thead><tr><th>Asset</th><th>Direction</th><th>Stake</th><th>Result</th><th>P&L</th><th>Settle demo</th></tr></thead><tbody id="tradeLedger"><tr><td colspan="6">No paper trades yet.</td></tr></tbody></table></div>
+</section>
+<section class="panel watch"><div class="cardhead"><span>MARKET WATCHLIST</span><span class="muted">Tap an asset to analyze</span></div><div id="watchlist" class="watchlist"></div></section>
+<footer><b>SignalForge Live</b><span>Data availability depends on the provider. Never trade solely from one indicator or pattern.</span></footer>
+</main><script src="app.js"></script></body></html>
